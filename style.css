@@ -1,6 +1,10 @@
 @font-face {
-    font-family: 'Tml';
-    font-weight: 100;
-    font-display: swap;
-    src: url(fonts/Workbench.ttf) format('ttf');
+    font-family: 'tml';
+    src: url('fonts/Workbench.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'tml', sans-serif;
 }
