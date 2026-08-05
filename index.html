@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="style.css">
+
 <html>
   <head>
     <title>EnigmaOS terminal</title>
   </head>
   <body>
     <div class="edgefade"> </div>
-        <h1>> welcome</h1>
+    <div class="scanlines"> </div>
+    
+    <h1>> welcome</h1>
+    
   </body>
-
+    
+    <script>
+      const scanlines = document.querySelector('.scanlines');
+      function flashlines() {
+        if (!scanlines) return;
+        scanlines.classList.add('flash');
+        setTimeout(() => { scanlines.classList.remove('flash'); }, 300);
+        const Wait = Math.floor(Math.random() * 4500) + 1500;
+        setTimeout(flashlines, Wait)
+      }
+      flashlines();
+    
+    </script>
 </html>
