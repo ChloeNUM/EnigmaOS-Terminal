@@ -44,7 +44,7 @@
 
 @keyframes scanscroll {
     0% {background-position: 0 0;}
-    100% {background-position: 0 250px;}
+    100% {background-position: 0 250px;} 
 }
 
 .scanlines.flash {
@@ -58,3 +58,6 @@ body {
     background-color: var(--bg); 
     color: var(--tmltxt);
 }
+
+
+
