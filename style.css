@@ -5,6 +5,22 @@
     font-style: normal;
 }
 
+:root {
+    --bg: #051103;
+    --tmltxt: #11ff04;
+}
+.edgefade {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    box-shadow: inset 0 0 120px #000000 ;
+}
+
+
 body {
     font-family: 'tml', sans-serif;
+    background-color: var(--bg); 
+    color: var(--tmltxt);
 }
