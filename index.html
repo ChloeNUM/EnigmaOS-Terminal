@@ -8,13 +8,19 @@
   <body>
     <div class="edgefade"> </div>
     <div class="scanlines"> </div>
-    
-    <h1>> welcome</h1>
-    
+    <div class="tml"> </div>
+      <div id="output"></div>
+
+    <div class="inputline">
+        <span class="prompt"> </span>
+        <input type="text" id="tmltext" autofocus autocomplete="off" spellcheck="false">
+      </div> <!-- make the input prompt object -->
+
   </body>
     
     <script>
-      const scanlines = document.querySelector('.scanlines');
+//makes scanlines flash randomly
+      const scanlines = document.querySelector('.scanlines'); 
       function flashlines() {
         if (!scanlines) return;
         scanlines.classList.add('flash');
@@ -23,6 +29,49 @@
         setTimeout(flashlines, Wait)
       }
       flashlines();
+
+//sets where the output and terminal text should render to
+const output = document.getElementById('output'); 
+const input = document.getElementById('tmltext');
     
-    </script>
+let istyping = false;
+let skiptyping = false;
+
+
+//sets textskip to true on keydown
+document.addEventListener('keydown', () => {if (istyping) {skiptyping = true;}} );
+
+//prints out the lines slowly :3
+async function printline(text) {
+  istyping=true;
+  skiptyping=false;
+  const lines = text.split('\n');
+  for (const thisline of lines) {
+    const lineElement = document.createElement('p');
+    output.appendChild(lineElement);
+    for (let i=0; i < thisline.length; i++) {
+      lineElement.textContent += thisline.charAt(i);
+      window.scrollTo(0, document.body.scrollHeight);
+
+      //skips the rest of the text if you press a key
+      if (!skiptyping) {await new Promise(resolve => setTimeout(resolve, 60))}
+    }
+  }
+istyping = false;
+skiptyping = false;
+}
+
+
+
+
+
+
+
+// waits for the page to load, then adds the page intro text
+window.addEventListener('DOMContentLoaded', () => {
+printline('> Welcome to EnigmaOS terminal v0.5 \n > all systems online. \n > type \'Help\' for commands... \n >  \n > or you could if i wasnt lazy');
+})
+
+
+</script>  
 </html>
