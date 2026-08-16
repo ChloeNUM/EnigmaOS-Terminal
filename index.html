@@ -52,23 +52,27 @@ async function printline(content) {
   istyping = true;
   skiptyping = false;
 
-  const lineElement = document.createElement('p');
-  output.appendChild(lineElement);
   if (content instanceof HTMLElement) {
+    const lineElement = document.createElement('p');
+    output.appendChild(lineElement);
     lineElement.appendChild(content);
     window.scrollTo(0, document.body.scrollHeight);
     istyping = false;
     return;
   }
 
-  //prints stuff in lines
+  // prints stuff in separate paragraph tags per newline
   const lines = String(content).split('\n');
   for (const thisline of lines) {
+    if (!thisline.trim()) continue;
+    const lineElement = document.createElement('p');
+    output.appendChild(lineElement);
+
     for (let i = 0; i < thisline.length; i++) {
       lineElement.textContent += thisline.charAt(i);
       window.scrollTo(0, document.body.scrollHeight);
 
-      if (!skiptyping) { await new Promise(resolve => setTimeout(resolve, 60)) }
+      if (!skiptyping) { await new Promise(resolve => setTimeout(resolve, 15)) }
     }
   }
   istyping = false;
@@ -123,7 +127,7 @@ async function listDirectoryItems() {
 
 // waits for the page to load to print the intro text
 window.addEventListener('DOMContentLoaded', async () => {
-  await printline("> Welcome to EnigmaOS terminal v0.5\n> all systems online.\n> try commands like 'dir documents' or 'goto /home/documents/bnuy'\n");
+  await printline("> Welcome to EnigmaOS terminal v0.5\n> all systems online.\n> try commands like 'dir documents' or 'goto /home/documents/bnuy'");
   await listDirectoryItems();
 });
 
@@ -202,7 +206,7 @@ async function processcmd(cmd, arg) {
     const constructedPath = `/${currentPath.join('/')}/${cleanArg}`;
     
     // push that shit to goto thats not my job
-        await processcmd('goto', constructedPath);
+    await processcmd('goto', constructedPath);
   }
   // GOTO does absolute paths
   else if (cmd === 'goto') {
@@ -248,5 +252,5 @@ input.addEventListener('keydown', async (e) => {
     await processcmd(cmd, arg);
   }
 });
-</script>   
+</script>    
 </html>
