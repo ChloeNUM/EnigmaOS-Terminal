@@ -64,7 +64,8 @@ async function printline(content) {
   // prints stuff in separate paragraph tags per newline
   const lines = String(content).split('\n');
   for (const thisline of lines) {
-    if (!thisline.trim()) continue;
+    if (!thisline.trim()) continue; 
+
     const lineElement = document.createElement('p');
     output.appendChild(lineElement);
 

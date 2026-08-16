@@ -1,1 +1,1 @@
-Squeak! i might fill this out later!
+https://chloenum.github.io/EnigmaOS-Terminal/
