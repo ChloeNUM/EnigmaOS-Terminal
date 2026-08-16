@@ -12,7 +12,7 @@
       <div id="output"></div>
 
     <div class="inputline">
-        <span class="prompt"> </span>
+        <span class="prompt">> </span>
         <input type="text" id="tmltext" autofocus autocomplete="off" spellcheck="false">
       </div> <!-- make the input prompt object -->
 
@@ -37,41 +37,163 @@ const input = document.getElementById('tmltext');
 let istyping = false;
 let skiptyping = false;
 
+//tracks the current working directory as an array of the subfolders
+let currentPath = ["home"];
 
-//sets textskip to true on keydown
-document.addEventListener('keydown', () => {if (istyping) {skiptyping = true;}} );
+//skips text if you press a button while its printing
+document.addEventListener('keydown', (e) => {
+  if (istyping && e.key !== 'Enter') {
+    skiptyping = true;
+  }
+});
 
 //prints out the lines slowly :3
 async function printline(text) {
-  istyping=true;
-  skiptyping=false;
+  istyping = true;
+  skiptyping = false;
   const lines = text.split('\n');
   for (const thisline of lines) {
     const lineElement = document.createElement('p');
     output.appendChild(lineElement);
-    for (let i=0; i < thisline.length; i++) {
+    for (let i = 0; i < thisline.length; i++) {
       lineElement.textContent += thisline.charAt(i);
       window.scrollTo(0, document.body.scrollHeight);
 
       //skips the rest of the text if you press a key
-      if (!skiptyping) {await new Promise(resolve => setTimeout(resolve, 60))}
+      if (!skiptyping) { await new Promise(resolve => setTimeout(resolve, 60)) }
     }
   }
-istyping = false;
-skiptyping = false;
+  istyping = false;
+  skiptyping = false;
 }
 
-
-
-
-
-
-
-// waits for the page to load, then adds the page intro text
+// waits for the page to load to print the intro text
 window.addEventListener('DOMContentLoaded', () => {
-printline('> Welcome to EnigmaOS terminal v0.5 \n > all systems online. \n > type \'Help\' for commands... \n >  \n > or you could if i wasnt lazy');
-})
+  printline("> Welcome to EnigmaOS terminal v0.5\n> all systems online.\n> try commands like 'ls', 'dir documents', or 'goto /home/documents/bnuy'");
+});
 
+const filesystem = {
+  "home": {
+    type: "dir",
+    children: {
+      "readme.txt": { type: "text", content: "Test text file" },
+      "documents": {
+        type: "dir",
+        children: {
+          "nya.txt": { type: "text", content: "meow" },
+          "bnuy": {
+            type: "dir",
+            children: {
+              "squeak.txt": { type: "text", content: "woahg.. bnuy" }
+            }
+          }
+        }
+      }
+    }
+  }
+};
 
-</script>  
+// resolves array path to filesystem object
+function resolvepath(patharray) {
+  if (!patharray || patharray.length === 0) return null;
+  let dir = filesystem[patharray[0]];
+  if (!dir) return null;
+
+  for (let i = 1; i < patharray.length; i++) {
+    if (dir.children && dir.children[patharray[i]] && dir.children[patharray[i]].type === 'dir') {
+      dir = dir.children[patharray[i]];
+    } else {
+      return null;
+    }
+  }
+  return dir;
+}
+
+// gets the value of the current working directory
+function getcwd() {
+  return resolvepath(currentPath);
+}
+
+// processes commands
+async function processcmd(cmd, arg) {
+  const current = getcwd();
+
+  // list the files
+  if (cmd === 'ls') {
+    const items = Object.keys(current.children || {}).join('\n');
+    await printline(`> ${items || '!Directory is empty!'}`);
+  }
+  else if (cmd === 'read') {
+    const file = current.children ? current.children[arg] : null;
+    if (file && file.type === 'text') {
+      await printline(`> ${file.content}`);
+    } else {
+      await printline('> ERR: File does not exist or is not readable');
+    }
+  }
+  else if (cmd === 'up') {
+    if (currentPath.length > 1) {
+      currentPath.pop();
+      await printline(`> Moved to /${currentPath.join('/')}`);
+    } else {
+      await printline('> ERR: cannot elevate any further');
+    }
+  }
+  //DIR prepends CWD and passes to GOTO
+  else if (cmd === 'dir') {
+    if (!arg) {
+      await printline(`> Current directory: /${currentPath.join('/')}`);
+      return;
+    }
+    // Clean off any leading slash the user typed
+    const cleanArg = arg.startsWith('/') ? arg.slice(1) : arg;
+    const constructedPath = `/${currentPath.join('/')}/${cleanArg}`;
+    
+    //send that shit to goto, thats not my job
+    await processcmd('goto', constructedPath);
+  }
+  // GOTO handles absolute paths
+  else if (cmd === 'goto') {
+    if (!arg || !arg.startsWith('/')) {
+      await printline(`> ERR: 'goto' requires an absolute path starting with '/'`);
+      return;
+    }
+
+    const absParts = arg.split('/').filter(p => p.length > 0);
+    const targetDir = resolvepath(absParts);
+
+    if (targetDir) {
+      currentPath = absParts;
+      await printline(`> Moved to /${currentPath.join('/')}`);
+    } else {
+      await printline(`> ERR: Directory '${arg}' does not exist`);
+    }
+  }
+  else if (cmd === 'clear') {
+    output.innerHTML = '';
+  }
+  else {
+    await printline(`> ERR: Unknown command '${cmd}'`);
+  }
+}
+
+// waits for you to type
+input.addEventListener('keydown', async (e) => {
+  if (e.key === 'Enter' && !istyping) {
+    const rawInput = input.value.trim();
+    if (!rawInput) return;
+
+    //puts the input text onto the screen
+    await printline(`> ${rawInput}`);
+    input.value = '';
+
+    //splits the input into the command and the argument
+    const parts = rawInput.split(' ');
+    const cmd = parts[0].toLowerCase();
+    const arg = parts[1];
+
+    await processcmd(cmd, arg);
+  }
+});
+</script>   
 </html>
