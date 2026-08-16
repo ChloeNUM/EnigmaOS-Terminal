@@ -47,19 +47,27 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-//prints out the lines slowly :3
-async function printline(text) {
+//prints out text or DOM nodes slowly :3
+async function printline(content) {
   istyping = true;
   skiptyping = false;
-  const lines = text.split('\n');
+
+  const lineElement = document.createElement('p');
+  output.appendChild(lineElement);
+  if (content instanceof HTMLElement) {
+    lineElement.appendChild(content);
+    window.scrollTo(0, document.body.scrollHeight);
+    istyping = false;
+    return;
+  }
+
+  //prints stuff in lines
+  const lines = String(content).split('\n');
   for (const thisline of lines) {
-    const lineElement = document.createElement('p');
-    output.appendChild(lineElement);
     for (let i = 0; i < thisline.length; i++) {
       lineElement.textContent += thisline.charAt(i);
       window.scrollTo(0, document.body.scrollHeight);
 
-      //skips the rest of the text if you press a key
       if (!skiptyping) { await new Promise(resolve => setTimeout(resolve, 60)) }
     }
   }
@@ -67,9 +75,56 @@ async function printline(text) {
   skiptyping = false;
 }
 
+//lists all items in the current directory with the pretty icons
+async function listDirectoryItems() {
+  const current = getcwd();
+  const children = current.children || {};
+  const itemNames = Object.keys(children);
+
+  if (itemNames.length === 0) {
+    await printline('> Directory is empty silly!');
+    return;
+  }
+
+  for (const name of itemNames) {
+    const item = children[name];
+    
+    //creates the container for the icons and file names
+    const itemContainer = document.createElement('span');
+    itemContainer.style.display = 'flex';
+    itemContainer.style.alignItems = 'center';
+    itemContainer.style.gap = '8px';
+
+    //adds the pretty icons to the right types of files
+    let iconPath = 'images/icon unknown.png';
+    if (item.type === 'dir') {
+      iconPath = 'images/folder icon.png';
+    } else if (item.type === 'text') {
+      iconPath = 'images/text icon.png';
+    }
+
+    //create icon image tag
+    const icon = document.createElement('img');
+    icon.src = iconPath;
+    icon.alt = `[${item.type || 'unknown'}]`;
+    icon.style.width = '16px';
+    icon.style.height = '16px';
+
+    //create text label tag
+    const label = document.createElement('span');
+    label.textContent = name;
+
+    itemContainer.appendChild(icon);
+    itemContainer.appendChild(label);
+
+    await printline(itemContainer);
+  }
+}
+
 // waits for the page to load to print the intro text
-window.addEventListener('DOMContentLoaded', () => {
-  printline("> Welcome to EnigmaOS terminal v0.5\n> all systems online.\n> try commands like 'ls', 'dir documents', or 'goto /home/documents/bnuy'");
+window.addEventListener('DOMContentLoaded', async () => {
+  await printline("> Welcome to EnigmaOS terminal v0.5\n> all systems online.\n> try commands like 'dir documents' or 'goto /home/documents/bnuy'\n");
+  await listDirectoryItems();
 });
 
 const filesystem = {
@@ -93,7 +148,7 @@ const filesystem = {
   }
 };
 
-// resolves array path to filesystem object
+// goes down the directory when you enter a folder
 function resolvepath(patharray) {
   if (!patharray || patharray.length === 0) return null;
   let dir = filesystem[patharray[0]];
@@ -118,12 +173,7 @@ function getcwd() {
 async function processcmd(cmd, arg) {
   const current = getcwd();
 
-  // list the files
-  if (cmd === 'ls') {
-    const items = Object.keys(current.children || {}).join('\n');
-    await printline(`> ${items || '!Directory is empty!'}`);
-  }
-  else if (cmd === 'read') {
+  if (cmd === 'read') {
     const file = current.children ? current.children[arg] : null;
     if (file && file.type === 'text') {
       await printline(`> ${file.content}`);
@@ -135,24 +185,26 @@ async function processcmd(cmd, arg) {
     if (currentPath.length > 1) {
       currentPath.pop();
       await printline(`> Moved to /${currentPath.join('/')}`);
+      await listDirectoryItems();
     } else {
       await printline('> ERR: cannot elevate any further');
     }
   }
-  //DIR prepends CWD and passes to GOTO
+  // DIR prepends current working path and passes to GOTO
   else if (cmd === 'dir') {
     if (!arg) {
       await printline(`> Current directory: /${currentPath.join('/')}`);
+      await listDirectoryItems();
       return;
     }
     // Clean off any leading slash the user typed
     const cleanArg = arg.startsWith('/') ? arg.slice(1) : arg;
     const constructedPath = `/${currentPath.join('/')}/${cleanArg}`;
     
-    //send that shit to goto, thats not my job
-    await processcmd('goto', constructedPath);
+    // push that shit to goto thats not my job
+        await processcmd('goto', constructedPath);
   }
-  // GOTO handles absolute paths
+  // GOTO does absolute paths
   else if (cmd === 'goto') {
     if (!arg || !arg.startsWith('/')) {
       await printline(`> ERR: 'goto' requires an absolute path starting with '/'`);
@@ -164,13 +216,14 @@ async function processcmd(cmd, arg) {
 
     if (targetDir) {
       currentPath = absParts;
-      await printline(`> Moved to /${currentPath.join('/')}`);
+      await listDirectoryItems();
     } else {
       await printline(`> ERR: Directory '${arg}' does not exist`);
     }
   }
   else if (cmd === 'clear') {
     output.innerHTML = '';
+    await printline('> cleared')
   }
   else {
     await printline(`> ERR: Unknown command '${cmd}'`);
