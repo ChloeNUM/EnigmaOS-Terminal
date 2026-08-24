@@ -107,11 +107,10 @@ async function listDirectoryItems() {
 
     //adds the pretty icons to the right types of files
     let iconPath = 'images/icon unknown.png';
-    if (item.type === 'dir') {
-      iconPath = 'images/folder icon.png';
-    } else if (item.type === 'text') {
-      iconPath = 'images/text icon.png';
-    }
+    if (item.type === 'dir') {iconPath = 'images/folder icon.png';}
+    else if (item.type === 'text') {iconPath = 'images/text icon.png';}
+    else if (item.type === 'image') {iconPath = 'images/image icon.png';}
+    else {iconPath = 'images/unknown icon.png';}
 
     //create icon image tag
     const icon = document.createElement('img');
