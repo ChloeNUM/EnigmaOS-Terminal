@@ -20,6 +20,10 @@
   </body>
     
     <script>
+// fair warning my formatting is all over the place, im bisexual for lowercase and camelcase
+
+
+
 //makes scanlines flash randomly
       const scanlines = document.querySelector('.scanlines'); 
       function flashlines() {
@@ -137,7 +141,7 @@ const filesystem = {
   "home": {
     type: "dir",
     children: {
-      "readme.txt": { type: "text", content: "Test text file" },
+      "readme.txt": { type: "text", content: "readme placeholder" },
       "documents": {
         type: "dir",
         children: {
@@ -145,7 +149,8 @@ const filesystem = {
           "bnuy": {
             type: "dir",
             children: {
-              "squeak.txt": { type: "text", content: "woahg.. bnuy" }
+              "squeak.txt": {type: "text", content: "woahg.. bnuy"},
+              "bunny.img": {type: "image", content: 'images/bunnibunnibunnibunnibunni.png'},
             }
           }
         }
@@ -181,13 +186,22 @@ async function processcmd(cmd, arg) {
 
   if (cmd === 'read') {
     const file = current.children ? current.children[arg] : null;
-    if (file && file.type === 'text') {
-      await printline(`> ${file.content}`);
+    if (file && file.type === 'text'){await printline(`> ${file.content}`);}
+    else if (file && file.type === 'image') {
+      const imgElement = document.createElement('img')
+      const targetFileName = file.file || arg;
+      imgElement.src = file.content; //backquotes refused to work??
+      imgElement.alt = arg;
+      imgElement.style.maxWidth = '300px';
+      imgElement.style.maxHeight = '300px';
+      imgElement.style.borderRadius = '5px'; 
+      imgElement.style.marginTop = '8px';
+    await printline(imgElement);
     } else {
-      await printline('> ERR: File does not exist or is not readable');
+    await printline('> ERR: File does not exist or is not readable');
     }
   }
-  else if (cmd === 'up') {
+    else if (cmd === 'up') {
     if (currentPath.length > 1) {
       currentPath.pop();
       await printline(`> Moved to /${currentPath.join('/')}`);
@@ -229,12 +243,11 @@ async function processcmd(cmd, arg) {
   }
   else if (cmd === 'clear') {
     output.innerHTML = '';
-    await printline('> cleared')
   }
   else {
     await printline(`> ERR: Unknown command '${cmd}'`);
   }
-}
+};
 
 // waits for you to type
 input.addEventListener('keydown', async (e) => {
