@@ -132,7 +132,7 @@ async function listDirectoryItems() {
 
 // waits for the page to load to print the intro text
 window.addEventListener('DOMContentLoaded', async () => {
-  await printline("> Welcome to EnigmaOS terminal v0.5\n> all systems online.\n> try commands like 'dir documents' or 'goto /home/documents/bnuy'");
+  await printline("> Welcome to EnigmaOS terminal v0.5\n> try 'dir documents' or 'goto /home/documents/bnuy'");
   await listDirectoryItems();
 });
 
