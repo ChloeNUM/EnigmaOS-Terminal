@@ -128,23 +128,21 @@ async function listDirectoryItems() {
 
 // waits for the page to load to print the intro text
 window.addEventListener('DOMContentLoaded', async () => {
-  await printline("> Welcome to EnigmaOS terminal v0.5\n> try 'dir documents' or 'goto /home/documents/bnuy'");
+  await printline("> Welcome to EnigmaOS terminal v0.5\n> try 'dir universes' or 'goto /home/universes/emily'");
   await listDirectoryItems();
 });
 
 const filesystem = {
-  "home": {
-    type: "dir",
-    icon: "folder",
-    children: {
+  "home": {type: "dir",icon: "folder",children: {
       "readme.txt": { type: "text", icon: "text", content: "readme placeholder" },
-      "universes": {
-        type: "dir",
-        icon: "world",
-        children: {
-                  "magine": { type: "dim", icon: "world", children: {
-                                      "dirasaki.ch": { type: "dir", children: {
-                    "dirasaki.bio": { type: "char", icon: "bio", content: 
+      "universes": {type: "dir", icon: "world", children: {
+                  
+        "genissa": 
+        
+        { type: "dir", icon: "world", children: {
+                  
+                    "dirasaki": { type: "dir", icon: "folder", children: {
+                    "dirasaki.bio": { type: "text", icon: "bio", content: 
                       `Dirasaki was born in Novia as part of a human-animal hybrid test. 
                       > When she was no longer needed they attempted to euthanize her. But she escaped into Gesnia. 
                       > She was stranded in space as her body slowly froze over. 
@@ -155,14 +153,52 @@ const filesystem = {
                       >
                       > age: 18
                       > height: 4 ft 10 in` 
-                      },
-                    }
-                  }
-                }
-              },
-            
-      "emily": { type: "char", icon: "folder", children: {
-        "emily.bio": { type: "char", icon: "bio", content: 
+}}},
+                  
+                "kyo": { type: "dir", icon: "folder", children: {
+                  "kyo.bio": { type: "text", icon: "bio", content: 
+                    `Kyo is a robot of unknown origin. with how many timelines shes passed through, its imposible to determine her beginnings. 
+                      > Before the blight, kyo frequently hopped dimensions in order to help those in need and try to find purpose in her life. 
+                      > It was during one of these trips she met amulis, and from then on fought against him. 
+                      > When amulis breached the heavens she proved to be a critical member of the team. Even if her methods where unorthodox.
+                      > Thanks to the help of chloe, she survived the blight and emerged from the ruins of the evercomet with her memories sustained. 
+                      > She now lives out her peaceful life in Genissa fixing broken machinery. Although evil may call her to rise once again...
+                      >
+                      > She/They/It
+                      > demisexual
+                      > age: unknown
+                      > height: 1ft 6in`
+}}}}},
+                  "novian": 
+                  { type: "dir", icon: "world", children: {
+                  
+                    "harper": { type: "dir", icon: "folder", children: {
+                    "harper.bio": { type: "text", icon: "bio", content: 
+`Harper is a resident of the Novian slums with a nearly unbreakable attitude. And one of the rebillion's most important operatives. 
+> She loves going to parties in her free time when shes not working jobs for the rebellion. 
+> When she is, she works under the name "Caydin"
+> Shes trained in both unarmed and armed combat, as well as being great at deception.
+> On the inside, she knows shes doing the right thing, but cant help feeling they're fighting a loosing battle. And misses when things where simpler.
+>
+> age: 16 (human years: 23)
+> height: 5ft 7in`
+}}},              
+                "bella": { type: "dir", icon: "folder", children: {
+                  "bella.bio": { type: "text", icon: "bio", content: 
+`A test subject considered the first functionally immortal Novian
+> Her brain was transfered into a robot body that mimics nerve receptors and motor functions of a normal person.
+> Theres slight discrepancies with her new body, like her limbs sometimes not moving where she tells them to. 
+> These issues make her feel incredibly uncomfortable in her own body, but unfortunately the process they used on her is irreversible. 
+> So she tries to make the most of it and does the best she can to feel better about herself. but it often isnt enough.
+>
+> age: N/A(?)
+> 4 ft 10 in`
+}}}}},
+      "the great trail": 
+      { type: "dir", icon: "world", children: {
+        "emily": { type: "dir", icon: "folder", children: {
+        
+          "emily.bio": { type: "text", icon: "bio", content: 
             `WRN: No Universe Detected
              > A soul floating amidst the vastness of stardust
              >
@@ -174,15 +210,8 @@ const filesystem = {
              >  
              > age: 12 (at time of loss)
              > she/her`
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-};
-                
+}}}}}}}}}};
+
 // goes down the directory when you enter a folder
 function resolvepath(patharray) {
   if (!patharray || patharray.length === 0) return null;
@@ -228,20 +257,19 @@ async function processcmd(cmd, arg) {
     else if (cmd === 'up') {
     if (currentPath.length > 1) {
       currentPath.pop();
-      await printline(`> Moved to /${currentPath.join('/')}`);
+      await printline(`> ${currentPath.join('/')}`);
       await listDirectoryItems();
     } else {
       await printline('> ERR: cannot elevate any further');
     }
   }
-  // DIR prepends current working path and passes to GOTO
+
   else if (cmd === 'dir') {
     if (!arg) {
       await printline(`> Current directory: /${currentPath.join('/')}`);
       await listDirectoryItems();
       return;
     }
-    // Clean off any leading slash the user typed
     const cleanArg = arg.startsWith('/') ? arg.slice(1) : arg;
     const constructedPath = `/${currentPath.join('/')}/${cleanArg}`;
     
