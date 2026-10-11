@@ -239,7 +239,7 @@ async function processcmd(cmd, arg) {
 
   if (cmd === 'read') {
     const file = current.children ? current.children[arg] : null;
-    if (file && file.type === 'text'){await printline(`> ${file.content}`);}
+    if (file && file.type === 'text') {await printline(`> ${file.content}`);}
     else if (file && file.type === 'image') {
       const imgElement = document.createElement('img')
       const targetFileName = file.file || arg;
@@ -314,8 +314,7 @@ input.addEventListener('keydown', async (e) => {
     //splits the input into the command and the argument
     const parts = rawInput.split(' ');
     const cmd = parts[0].toLowerCase();
-    const arg = parts[1];
-
+    const arg = parts.split(1).join(' ');
     await processcmd(cmd, arg);
   }
 });
