@@ -150,14 +150,20 @@ const filesystem = {
 
       "universes": {type: "dir", icon: "world", children: {
                   
-        "genissa": 
+        "gemina": 
         
         { type: "dir", icon: "world", children: {
-                  
-                    "dirasaki": { type: "dir", icon: "folder", children: {
+     
+     
+          "info.txt": { type: "text", icon: "text", content:`
+          a universe where much of the matter of enigma condensed itself. leading to a few familiar structures reforming themselves anew. 
+          > generally inhabited by those who take solice in the fact the old world still exists, just vastly different.`
+        },
+
+                  "dirasaki": { type: "dir", icon: "folder", children: {
                     "dirasaki.bio": { type: "text", icon: "bio", content: 
                       `Dirasaki was born in Novia as part of a human-animal hybrid test. 
-                      > When she was no longer needed they attempted to euthanize her. But she escaped into Gesnia. 
+                      > When she was no longer needed they attempted to euthanize her. But she escaped into Gemina. 
                       > She was stranded in space as her body slowly froze over. 
                       > Luckily she was discovered by Kyo, who reassembled her body with robot parts.
                       >                  
@@ -165,8 +171,8 @@ const filesystem = {
                       >
                       > age: 18
                       > height: 4 ft 10 in` 
-}
-,"Picture1.img": {type: "img",icon:"image", content:"Dira1.png"}
+},
+"Picture1.img": {type: "img",icon:"image", content:"Dira1.png"}
 }},
                   
                 "kyo": { type: "dir", icon: "folder", children: {
@@ -174,23 +180,23 @@ const filesystem = {
                     `Kyo is a robot of unknown origin. with how many timelines shes passed through, its imposible to determine her beginnings. 
                       > Before the blight, kyo frequently hopped dimensions in order to help those in need and try to find purpose in her life. 
                       > It was during one of these trips she met amulis, and from then on fought against him. 
-                      > When amulis breached the heavens she proved to be a critical member of the team. Even if her methods where unorthodox.
-                      > Thanks to the help of chloe, she survived the blight and emerged from the ruins of the evercomet with her memories sustained. 
-                      > She now lives out her peaceful life in Genissa fixing broken machinery. Although evil may call her to rise once again...
+                      > When amulis breached celestia she proved to be a critical member of the team. Even if her methods where unorthodox.
+                      > Thanks to the help of ztayr, she survived the blight and emerged from the ruins of the evercomet with her memories sustained. 
+                      > She now lives out her peaceful life in Gemina fixing broken machinery. Although evil may call her to rise once again...
                       >
                       > She/They/It
                       > demisexual
                       > age: unknown
                       > height: 1ft 6in`
-}
-,"Picture1.img": {type: "img",icon:"image", content:"Kyo1.png"}
+},
+"Picture1.img": {type: "img",icon:"image", content:"Kyo1.png"}
 }}}},
-                  "novian": 
-                  { type: "dir", icon: "world", children: {
-                  
-                    "harper": { type: "dir", icon: "folder", children: {
-                    "harper.bio": { type: "text", icon: "bio", content: 
-`Harper is a resident of the Novian slums with a nearly unbreakable attitude. And one of the rebillion's most important operatives. 
+                  "novian": {type: "dir", icon: "world", children: {
+                  "info.txt": { type: "text", icon: "text", content:`
+                  a world filled with greed and corruption by the novia corperation. 
+                  > a rebellion group aims to fix this world and make it peaceful once again`},
+                  "harper": { type: "dir", icon: "folder", children: {"harper.bio": { type: "text", icon: "bio", content: 
+`Harper is a resident of the Novian slums with a nearly unbreakable will. And one of the rebillion's most important operatives. 
 > She loves going to parties in her free time when shes not working jobs for the rebellion. 
 > On the inside, she knows shes doing the right thing, but cant help feeling they're fighting a loosing battle. And misses when things where simpler.
 >
@@ -203,18 +209,25 @@ const filesystem = {
 > Her brain was transfered into a robot body that mimics nerve receptors and motor functions of a normal person.
 > Theres slight discrepancies with her new body, like her limbs sometimes not moving where she tells them to. 
 > These issues make her feel incredibly uncomfortable in her own body, but unfortunately the process they used on her is irreversible. 
-> So she tries to make the most of it and does the best she can to feel better about herself. 
+> She tries to make the most of it and does the best she can to feel better about herself. 
 >
-> age: N/A(?)
+> age: Undocumented
 > 4 ft 10 in`
-}}}}},
-      "the great trail": 
+}}}},
+      "the trail": 
       { type: "dir", icon: "world", children: {
+                  "info.txt": { type: "text", icon: "text", content:`
+         the trail of the evercomet.
+         > the comet contains the condensed matter of the old world, and scatters it across the new world. 
+         > this allows new matter to merge and construct a new universe from the dust of its trail.
+         > its said that whenever one dies, their bodies and soul are added back to the comet, perpetuating the cycle of existance.
+                  `},
+
         "emily": { type: "dir", icon: "folder", children: {
         
           "emily.bio": { type: "text", icon: "bio", content: 
             `WRN: No Universe Detected
-             > A soul floating amidst the vastness of stardust
+             > A soul floating amidst the vastness of matter in the evercomet's trail
              >
              > Before the blight, Emily was a troubled child. her doctors dragged her away after the death of her sister. taking her to a mental hospital.
              > There, doctors convinced her and her family she was suicidal because of her sister's death, and used it to keep her restrained and abused.
@@ -227,7 +240,7 @@ const filesystem = {
              >
              > age: 12
              > she/her`
-}}}}}}}}}};
+}}}}}}}}}}};
 
 // goes down the directory when you enter a folder
 function resolvepath(patharray) {
