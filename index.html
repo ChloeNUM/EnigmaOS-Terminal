@@ -92,7 +92,7 @@ async function listDirectoryItems() {
   const itemNames = Object.keys(children);
 
   if (itemNames.length === 0) {
-    await printline('> Directory is empty silly!');
+    await printline('> Acess Denied');
     return;
   }
 
@@ -128,7 +128,7 @@ async function listDirectoryItems() {
 
 // waits for the page to load to print the intro text
 window.addEventListener('DOMContentLoaded', async () => {
-  await printline("> Welcome to EnigmaOS terminal v0.5\n> try 'dir universes' or 'goto /home/universes/emily'");
+  await printline("> Welcome to EnigmaOS terminal v0.5\n> Type 'help' for help");
   await listDirectoryItems();
 });
 
@@ -313,9 +313,9 @@ input.addEventListener('keydown', async (e) => {
     input.value = '';
 
     //splits the input into the command and the argument
-    const parts = rawInput.split(' ');
-    const cmd = parts[0].toLowerCase();
-    const arg = parts.split(1).join(' ');
+
+    const cmd = rawInput.split(':')[0].toLowerCase();
+    const arg = rawInput.split(':')[1];
     await processcmd(cmd, arg);
   }
 });
