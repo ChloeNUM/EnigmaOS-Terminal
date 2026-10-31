@@ -128,13 +128,26 @@ async function listDirectoryItems() {
 
 // waits for the page to load to print the intro text
 window.addEventListener('DOMContentLoaded', async () => {
-  await printline("> Welcome to EnigmaOS terminal v0.5\n> Type 'help' for help");
+  await printline("> Welcome to EnigmaOS terminal v0.5\n> Type 'read:help.txt' for command help");
   await listDirectoryItems();
 });
 
 const filesystem = {
   "home": {type: "dir",icon: "folder",children: {
-      "readme.txt": { type: "text", icon: "text", content: "readme placeholder" },
+      "help.txt": { type: "text", icon: "text", content:
+      `a command and its arguments are sperated by ":" 
+      > EX: "read:help.txt"
+      > although, not all commands require arguments
+
+      > "read" reads the file pointed to by the argument. Can be a .txt, .img, or .bio file.
+      > "goto" moves the current directory to the entire path specified in the argument. uses absolute path.
+      > "dir" moves the current directory down to the folder in the argument. uses the relative path. 
+      > if no argument is provided then prints the current absolute path.
+      > "up" moves the current directory upwards a subfolder. doesnt use arguments.
+
+      > try "dir:universes" to get started
+      `}, 
+
       "universes": {type: "dir", icon: "world", children: {
                   
         "genissa": 
